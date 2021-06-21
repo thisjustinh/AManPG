@@ -1,4 +1,4 @@
-prox_l1 <- function(b, lambda, r) {
+prox.l1 <- function(b, lambda, r) {
   a <- abs(b) - lambda
 
   # TODO: Check what the heck the difference between these is
