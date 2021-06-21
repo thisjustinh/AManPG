@@ -7,9 +7,9 @@
 spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, verbose=FALSE) {
   start <- Sys.time()
 
-  dims <- dim(B);
+  dims <- dim(b);
   m <- dims[1];
-  b <- dims[2];
+  d <- dims[2];
   # anonymous function that gets sum of matrix X times mu
   # TODO: Check that this matches MATLAB functionality (should colSums be used?)
   h <- function(x) mu * sum(x)
@@ -52,6 +52,12 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
     f_rgd <- fx + fy  # will become vector in the loop
 
     for (iter in 2:maxiter) {
+      if (verbose) {
+        iter_start <- Sys.time()
+        print("=========================")
+        print(paste("On iteration", iter))
+      }
+
       ### update y ###
       if (!linesearch_flag_y) t <- t * 1.01 else t <- max(1/ly, t/1.01)
       linesearch_flag_y <- 0
@@ -123,6 +129,11 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
       if (iter > 1)
         if ((abs(f_rgd[iter]) - f_rgd[iter - 1]) < tol && f_rgd[iter] < f_palm || abs(f_rgd[iter] - f_rgd[iter - 1]) < 1e-12)
           break
+
+      if (verbose) {
+        print(paste("Finished with value", f_rgd[iter]))
+        print(difftime(Sys.time(), iter_start))
+      }
     }
   } else {  # lambda is Inf
     fx <- -2 * sum(x * ay)
