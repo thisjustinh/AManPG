@@ -85,7 +85,8 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
       ay <- ayt
 
       ### update x ###
-      if (!linesearch_flag) tau <- tau*1.1 else tau <- 1/d
+      if (!linesearch_flag) tau <- tau*1.1
+      if (min_step == 1) tau <- 1/d
       linesearch_flag <- 0
       min_step <- 0
       gx <- -2 * ay
@@ -150,7 +151,7 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
       ### update y ###
       t <- 1/2
       y <- prox.l1(y - 2 * t * (-ax + y), mu * t, n)
-      if (!type) ay <- Conj(t(b)) %*% (b %*% b) else ay <- b %*% b
+      if (!type) ay <- Conj(t(b)) %*% (b %*% y) else ay <- b %*% y
 
       ### update X ###
       gx <- -2 * ay
