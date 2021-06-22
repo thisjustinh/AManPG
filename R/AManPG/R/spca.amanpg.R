@@ -4,15 +4,14 @@
 # TODO: Consider custom gamma value?
 
 
-spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, verbose=FALSE) {
+spca.amanpg <- function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, verbose=FALSE) {
   start <- Sys.time()
 
   dims <- dim(b);
   m <- dims[1];
   d <- dims[2];
   # anonymous function that gets sum of matrix X times mu
-  # TODO: Check that this matches MATLAB functionality (should colSums be used?)
-  h <- function(x) mu * sum(x)
+  h <- function(x) sum(mu * colSums(abs(x)))
 
   if (d < m * 2) {
     b <- Conj(t(b)) %*% b  # B^T B
@@ -46,6 +45,7 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
     ax <- b %*% x
   }
 
+  ### Main Loop ###
   if (is.finite(lambda)) {  # elastic net parameter isn't Inf
     fx <- -2 * sum(x * ay)
     fy <- sum(y * ay) + lambda * norm(y, 'F')^2 + h(y)
@@ -67,6 +67,8 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
       if (!type) ayt <- Conj(t(b)) %*% (b %*% y_t) else ayt <- b %*% y_t
       f_ytrial <- -2 * sum(x * ayt) + sum(y_t * ayt) + lambda * norm(y_t, 'F')^2 + h(y_t)
       normpg <- norm(y_t - y, 'F')^2 / t^2
+      print(f_ytrial)
+      print(dim(f_ytrial))
 
       # adjust step size to be appropriate
       while (f_ytrial > f_rgd[iter - 1] - 1e-3 * t * normpg) {
@@ -94,10 +96,12 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
       # RGX <- gx - X %*% xgx  # Canonical Riemannian gradient
       rgx <- gx - 0.5 * x %*% (xgx + Conj(t(xgx)))  # Projected gradient
       tx <- x - tau * rgx
+
+      # TODO: sigma may return negative values, how to use sqrt
       eigendecomp <- eigen(Conj(t(tx)) %*% tx)
       u <- diag(x=eigendecomp$values)
       sigma <- diag(eigendecomp$vectors)
-      j <- u %*% diag(sqrt(1 / sigma)) %*% Conj(t(u))
+      j <- u %*% diag(sqrt(1 / abs(sigma))) %*% Conj(t(u))  # note use of abs
       x_trial <- tx %*% j
       f_xtrial <- -2 * sum(x_trial * ay)
       fxval <- -2 * sum(x * ay)
@@ -114,7 +118,7 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
         eigendecomp <- eigen(Conj(t(tx)) %*% tx)
         u <- diag(x=eigendecomp$values)
         sigma <- diag(eigendecomp$vectors)
-        j <- u %*% diag(sqrt(1 / sigma)) %*% Conj(t(u))
+        j <- u %*% diag(sqrt(1 / abs(sigma))) %*% Conj(t(u))  # note use of abs
         x_trial <- tx %*% j
         total_linesearch <- total_linesearch + 1
         linesearch_flag <- 1
@@ -193,7 +197,7 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
   }
 
   ### Process return list ###
-  y_norm <- sqrt(colSums(y^2))  # TODO: Check colSums?
+  y_norm <- sqrt(colSums(y^2))
   y_norm[y_norm == 0] <- 1
 
   results <- list(
