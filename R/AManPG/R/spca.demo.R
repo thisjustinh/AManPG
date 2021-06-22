@@ -9,11 +9,10 @@ m <- 1000  # sample size
 mu <- 0.1 * matrix(data=1, nrow=n, ncol=1)
 type <- 0
 lambda <- 1
-f_palm <- 0  # what is this?
+f_palm <- 1e5  # what is this?
 
 set.seed(10)
-a <- matrix(rnorm(m * d), m, d)
-a <- scale(a)
+a <- normalize(matrix(rnorm(m * d), m, d))
 x0 <- svd(a, nv=n)$v
 
-sprout <- spca.amanpg(a, mu, lambda, n, type, maxiter, tol, x0, x0, fpalm, verbose=TRUE)
+sprout <- spca.amanpg(a, mu, lambda, n, x0, x0, type, maxiter, tol, f_palm, verbose=TRUE)

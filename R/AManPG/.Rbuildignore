@@ -2,4 +2,4 @@
 ^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^R/spca\.demo\.R$
+R/spca.demo.R

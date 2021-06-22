@@ -11,22 +11,33 @@ spca_amanpg(B, mu, lambda, n, type, maxiter, tol, X0, Y0, F_palm)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
-%%     ~~Describe \code{x} here~~
+  \item{b}{Data or covariance matrix to be analyzed}
+  \item{mu}{Good question!}
+  \item{n}{Number of columns in x, y}
+  \item{x0}{Initial x value for gradient algorithm}
+  \item{y0}{Initial y value for gradient algorithm}
+  \item{type}{
+    0 indicates \code{b} is data matrix, 1 indicates \code{b} is covariance matrix, default is 0
+  }
+  \item{maxiter}{Maximum number of iterations prior to termination of algorithm, default is 1e4}
+  \item{tol}{Tolerance level for detecting convergence, default is 1e-5}
+  \item{f_palm}{Good question! I can see it's a convergence condition tho}
+  \item{verbose}{Logical where TRUE displays progress during execution, default is FALSE}
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+  \item{iter}{Number of iterations used in the algorithm}
+  \item{f_amanpg}{Final value returned}
+  \item{sparsity}{Ratio of all values in returned matrix with zeroes}
+  \item{time}{Seconds used during execution}
+  \item{x}{Final x matrix}
+  \item{y_man}{Final y matrix of principal components}
 }
 \references{
-%% ~put references to the literature/web site here ~
+Shixiang Chen, Shiqian Ma, Lingzhou Xue and Hui Zou. An Alternating Manifold Proximal Gradient Method for Sparse PCA and Sparse CCA. 2019.
 }
 \author{
 %%  ~~who you are~~
