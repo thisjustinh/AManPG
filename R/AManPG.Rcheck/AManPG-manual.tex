@@ -1,0 +1,190 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8]{inputenc} % @SET ENCODING@
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `AManPG'}}
+\par\bigskip{\large \today}
+\end{center}
+\inputencoding{utf8}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {AManPG: What the Package Does (Title Case)}}}{}\begin{description}
+\raggedright{}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{What the Package Does (Title Case)}
+\item[Version]\AsIs{0.1.0}
+\item[Author]\AsIs{Who wrote it}
+\item[Maintainer]\AsIs{The package maintainer }\email{yourself@somewhere.net}\AsIs{}
+\item[Description]\AsIs{More about what it does (maybe more than one line)
+Use four spaces when indenting paragraphs within the Description.}
+\item[License]\AsIs{What license is it under?}
+\item[Encoding]\AsIs{UTF-8}
+\item[NeedsCompilation]\AsIs{no}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{hello}{Hello, World!}{hello}
+%
+\begin{Description}\relax
+Prints 'Hello, world!'.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+hello()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Examples}
+\begin{ExampleCode}
+hello()
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{prox\_l1}{Proximal L1 Mapping}{prox.Rul.l1}
+%
+\begin{Description}\relax
+Honestly I don't know what this does yet haha
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+prox_l1(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] 
+
+
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Examples}
+\begin{ExampleCode}
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (x)
+{
+  }
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{spca\_amanpg}{Alternativing Manifold Proximal Gradient Method for Sparse PCA}{spca.Rul.amanpg}
+%
+\begin{Description}\relax
+
+Executes sparse PCA using the AManPG algorithm.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+spca_amanpg(B, mu, lambda, n, type, maxiter, tol, X0, Y0, F_palm)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{b}] Data or covariance matrix to be analyzed
+\item[\code{mu}] Good question!
+\item[\code{n}] Number of columns in x, y
+\item[\code{x0}] Initial x value for gradient algorithm
+\item[\code{y0}] Initial y value for gradient algorithm
+\item[\code{type}] 
+0 indicates \code{b} is data matrix, 1 indicates \code{b} is covariance matrix, default is 0
+
+\item[\code{maxiter}] Maximum number of iterations prior to termination of algorithm, default is 1e4
+\item[\code{tol}] Tolerance level for detecting convergence, default is 1e-5
+\item[\code{f\_palm}] Good question! I can see it's a convergence condition tho
+\item[\code{verbose}] Logical where TRUE displays progress during execution, default is FALSE
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{ldescription}
+\item[\code{iter}] Number of iterations used in the algorithm
+\item[\code{f\_amanpg}] Final value returned
+\item[\code{sparsity}] Ratio of all values in returned matrix with zeroes
+\item[\code{time}] Seconds used during execution
+\item[\code{x}] Final x matrix
+\item[\code{y\_man}] Final y matrix of principal components
+\end{ldescription}
+\end{Value}
+%
+\begin{References}\relax
+Shixiang Chen, Shiqian Ma, Lingzhou Xue and Hui Zou. An Alternating Manifold Proximal Gradient Method for Sparse PCA and Sparse CCA. 2019.
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (x)
+{
+  }
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{svd.econ}{Economy-Size Singular Value Decomposition}{svd.econ}
+%
+\begin{Description}\relax
+Produces an economy-size decomposition of \eqn{m}{}-by-\eqn{n}{} matrix \eqn{x}{}, similar to the functionality in MATLAB.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+svd.econ(x, type=1)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] Matrix to be decomposed into \eqn{UDV}{}
+\item[\code{type}] If 0, will only consider the \code{m > n} case. If 1, will consider \code{m > n} and \code{m < n}
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+If \code{m > n}, only the first \eqn{n}{} columns of \eqn{U}{} are computed, and \eqn{D}{} is of length \eqn{n}{}.
+
+If \code{m < n}, only the first \eqn{m}{} columns of \eqn{V}{} are computed, and \eqn{D}{} is of length \eqn{m}{}.
+
+If \code{m == n}, the base \code{svd} function will be executed.
+
+Note that for \code{type = 0}, only the condition \code{m > n} will perform an economy-size decomposition. For \code{m <= n}, the base \code{svd} function is run.
+\end{Details}
+%
+\begin{Author}\relax
+Justin Huang
+\end{Author}
+%
+\begin{References}\relax
+https://www.mathworks.com/help/matlab/ref/double.svd.html
+\end{References}
+%
+\begin{SeeAlso}\relax
+\code{\LinkA{svd}{svd}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+set.seed(10)
+x <- matrix(rnorm(3 * 4), 3, 4)
+udv <- svd.econ(x)
+
+udv.0 <- svd.econ(x, 0)
+\end{ExampleCode}
+\end{Examples}
+\printindex{}
+\end{document}

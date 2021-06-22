@@ -1,0 +1,89 @@
+* using log directory ‘/Users/justin/Documents/Development/AManPG/R/AManPG.Rcheck’
+* using R version 4.1.0 (2021-05-18)
+* using platform: aarch64-apple-darwin20.4.0 (64-bit)
+* using session charset: UTF-8
+* checking for file ‘AManPG/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘AManPG’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘AManPG’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... WARNING
+Non-standard license specification:
+  What license is it under?
+Standardizable: FALSE
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... NOTE
+prepare_Rd: prox.l1.Rd:17-19: Dropping empty section \details
+prepare_Rd: prox.l1.Rd:20-26: Dropping empty section \value
+prepare_Rd: prox.l1.Rd:33-35: Dropping empty section \note
+prepare_Rd: prox.l1.Rd:30-32: Dropping empty section \author
+prepare_Rd: prox.l1.Rd:27-29: Dropping empty section \references
+prepare_Rd: prox.l1.Rd:39-41: Dropping empty section \seealso
+prepare_Rd: spca.amanpg.Rd:27-29: Dropping empty section \details
+prepare_Rd: spca.amanpg.Rd:44-46: Dropping empty section \note
+prepare_Rd: spca.amanpg.Rd:41-43: Dropping empty section \author
+prepare_Rd: spca.amanpg.Rd:50-52: Dropping empty section \seealso
+prepare_Rd: svd.econ.Rd:23-29: Dropping empty section \value
+prepare_Rd: svd.econ.Rd:34-36: Dropping empty section \note
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘normalize’ ‘prox.l1’ ‘spca.amanpg’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... WARNING
+Functions or methods with usage in documentation object 'prox_l1' but not in code:
+  ‘prox_l1’
+
+Functions or methods with usage in documentation object 'spca_amanpg' but not in code:
+  ‘spca_amanpg’
+
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'spca_amanpg'
+  ‘B’ ‘lambda’ ‘X0’ ‘Y0’ ‘F_palm’
+Documented arguments not in \usage in documentation object 'spca_amanpg':
+  ‘b’ ‘x0’ ‘y0’ ‘f_palm’ ‘verbose’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking examples ... OK
+* checking PDF version of manual ... WARNING
+LaTeX errors when creating PDF version.
+This typically indicates Rd problems.
+* checking PDF version of manual without hyperrefs or index ... ERROR
+Re-running with no redirection of stdout/stderr.
+* DONE
+Status: 1 ERROR, 5 WARNINGs, 1 NOTE
