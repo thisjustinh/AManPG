@@ -97,7 +97,7 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
       eigendecomp <- eigen(Conj(t(tx)) %*% tx)
       u <- diag(x=eigendecomp$values)
       sigma <- diag(eigendecomp$vectors)
-      j <- u %*% diag(sqrt(1 / sigma)) %*% Conj(t(U))
+      j <- u %*% diag(sqrt(1 / sigma)) %*% Conj(t(u))
       x_trial <- tx %*% j
       f_xtrial <- -2 * sum(x_trial * ay)
       fxval <- -2 * sum(x * ay)
@@ -114,7 +114,7 @@ spca.amanpg = function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ver
         eigendecomp <- eigen(Conj(t(tx)) %*% tx)
         u <- diag(x=eigendecomp$values)
         sigma <- diag(eigendecomp$vectors)
-        j <- u %*% diag(sqrt(1 / sigma)) %*% Conj(t(U))
+        j <- u %*% diag(sqrt(1 / sigma)) %*% Conj(t(u))
         x_trial <- tx %*% j
         total_linesearch <- total_linesearch + 1
         linesearch_flag <- 1
