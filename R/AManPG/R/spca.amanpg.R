@@ -99,8 +99,8 @@ spca.amanpg <- function(b, mu, lambda, n, type, maxiter, tol, x0, y0, f_palm, ve
 
       # TODO: sigma may return negative values, how to use sqrt
       eigendecomp <- eigen(Conj(t(tx)) %*% tx)
-      u <- diag(x=eigendecomp$values)
-      sigma <- diag(eigendecomp$vectors)
+      u <- eigendecomp$vectors
+      sigma <- eigendecomp$values
       j <- u %*% diag(sqrt(1 / abs(sigma))) %*% Conj(t(u))  # note use of abs
       x_trial <- tx %*% j
       f_xtrial <- -2 * sum(x_trial * ay)
