@@ -3,8 +3,9 @@
 # TODO: Check if conjugate transpose is necessary. If not, get rid of Conj() calls.
 # TODO: Consider custom gamma value?
 
-spca.amanpg <- function(b, mu, lambda, n, x0, y0, type=0, maxiter=1e4, tol=1e-5,
-                        f_palm, verbose=FALSE) {
+spca.amanpg <- function(b, mu, lambda, n, x0, y0, f_palm, type=0, gamma=0.5,
+                        maxiter=1e4, tol=1e-5, verbose=FALSE) {
+
   start <- Sys.time()
 
   dims <- dim(b);
@@ -18,7 +19,6 @@ spca.amanpg <- function(b, mu, lambda, n, x0, y0, type=0, maxiter=1e4, tol=1e-5,
     type <- 1
   }
 
-  # TODO: Check that the svds replacement works
   svds1 <- svd(b)$d[1]
   if (!type) ly <- 2 * svds1^2 + 2 * lambda else ly <- 2 * svds1 + 2 * lambda
 
@@ -95,7 +95,6 @@ spca.amanpg <- function(b, mu, lambda, n, x0, y0, type=0, maxiter=1e4, tol=1e-5,
       rgx <- gx - 0.5 * x %*% (xgx + Conj(t(xgx)))  # Projected gradient
       tx <- x - tau * rgx
 
-      # TODO: sigma may return negative values, how to use sqrt
       eigendecomp <- eigen(Conj(t(tx)) %*% tx)
       u <- eigendecomp$vectors
       sigma <- eigendecomp$values
@@ -205,9 +204,14 @@ spca.amanpg <- function(b, mu, lambda, n, x0, y0, type=0, maxiter=1e4, tol=1e-5,
       }
 
       # if normDsquared < tol^2, as in the e-stationary point
-      if (iter > 1)
-        if (abs(f_rgd[iter] - f_rgd[iter - 1]) < tol)
+      if (iter > 1) {
+        if (abs(f_rgd[iter] - f_rgd[iter - 1]) < tol) {
+          if (verbose) {
+            print(paste("Final difference of", abs(f_rgd[iter] - f_rgd[iter - 1])))
+          }
           break
+        }
+      }
     }
   }
 

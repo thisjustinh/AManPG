@@ -1,7 +1,4 @@
 prox.l1 <- function(b, lambda, r) {
-  #print(b)
-  #print(lambda)
-  #print(r)
   a <- abs(b) - as.vector(lambda)
 
   # TODO: Check what the heck the difference between these is
