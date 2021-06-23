@@ -135,11 +135,10 @@ spca.amanpg <- function(b, mu, lambda, n, x0, y0, f_palm, type=0, gamma=0.5,
         print(difftime(Sys.time(), iter_start))
       }
 
-      if (iter > 1)
-        if (abs(f_rgd[iter] - f_rgd[iter - 1]) < tol && f_rgd[iter] < f_palm || abs(f_rgd[iter] - f_rgd[iter - 1]) < 1e-12) {
-          if (verbose) print(paste("Difference of", abs(f_rgd[iter] - f_rgd[iter-1])))
-          break
-        }
+      if (abs(f_rgd[iter] - f_rgd[iter - 1]) < tol && f_rgd[iter] < f_palm || abs(f_rgd[iter] - f_rgd[iter - 1]) < 1e-12) {
+        if (verbose) print(paste("Difference of", abs(f_rgd[iter] - f_rgd[iter-1])))
+        break
+      }
     }
   } else {  # lambda is Inf
     fx <- -2 * sum(x * ay)
@@ -169,7 +168,9 @@ spca.amanpg <- function(b, mu, lambda, n, x0, y0, f_palm, type=0, gamma=0.5,
       xgx <- Conj(t(gx)) %*% x
       rgx <- gx - x %*% xgx  # Canonical Riemannian gradient
       tx <- x - tau * rgx
-      tmp <- svd.econ(tx, type=0)
+      # tmp <- svd.econ(tx, type=0)
+      tx.dims <- dim(tx)
+      tmp <- svd(tx, nu=min(tx.dims[1], tx.dims[2]), nv=min(tx.dims[1], tx.dims[2]))
       x_trial <- tmp$u %*% Conj(t(tmp$v))
       f_xtrial <- -2 * sum(x_trial * ay)
       fxval <- -2 * sum(x * ay)
@@ -183,7 +184,7 @@ spca.amanpg <- function(b, mu, lambda, n, x0, y0, f_palm, type=0, gamma=0.5,
         }
 
         tx <- x - tau * rgx
-        tmp <- svd.econ(tx, type=0)
+        # tmp <- svd.econ(tx, type=0)
         x_trial <- tmp$u %*% Conj(t(tmp$v))
         total_linesearch <- total_linesearch + 1
         linesearch_flag <- 1
@@ -204,15 +205,15 @@ spca.amanpg <- function(b, mu, lambda, n, x0, y0, f_palm, type=0, gamma=0.5,
       }
 
       # if normDsquared < tol^2, as in the e-stationary point
-      if (iter > 1) {
-        if (abs(f_rgd[iter] - f_rgd[iter - 1]) < tol) {
-          if (verbose) {
-            print(paste("Final difference of", abs(f_rgd[iter] - f_rgd[iter - 1])))
-          }
-          break
+
+      if (abs(f_rgd[iter] - f_rgd[iter - 1]) < tol) {
+        if (verbose) {
+          print(paste("Final difference of", abs(f_rgd[iter] - f_rgd[iter - 1])))
         }
+        break
       }
     }
+
   }
 
   ### Process return list ###
