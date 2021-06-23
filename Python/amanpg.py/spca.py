@@ -120,11 +120,11 @@ def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm,
                     print("Final difference of", abs(f_rgd[i] - f_rgd[i - 1]))
                 break
     else:  # lamb is inf
-        fx = -2 * sum(x * ay)
+        fx = -2 * np.sum(x * ay)
         fy = LA.norm(y, 'fro') ** 2 + h(y)
         f_rgd = [fx + fy]
 
-        for i in range(2, maxiter):
+        for i in range(1, int(maxiter)):
             if verbose:
                 loop_start = time.perf_counter()
                 print("=========================")
@@ -156,7 +156,7 @@ def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm,
             normpg = LA.norm(rgx, 'fro') ** 2
 
             while f_xtrial > fxval - 1e-3 * tau * normpg:
-                tau *= tau
+                tau *= gamma
                 if tau < 1e-3 / d:
                     min_step = 1
                     break
@@ -180,7 +180,7 @@ def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm,
                 print("Finished with value", f_rgd[i], "and difference", abs(f_rgd[i]-f_rgd[i - 1]))
                 print("Done in time", time.perf_counter() - loop_start)
             
-            if abs(f_rgd[i] - f_rgd[i - 1] < tol):
+            if abs(f_rgd[i] - f_rgd[i - 1]) < tol:
                 if verbose:
                     print("Final difference of", abs(f_rgd[i] - f_rgd[i - 1]))
                 break
