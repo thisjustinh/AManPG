@@ -203,6 +203,14 @@ def prox_l1(b, lamb, r):
     return x_prox
 
 
+def normalize(x):
+    x -= np.mean(x, axis=1, keepdims=True)  # center
+
+    # normalize rows using l2 norm
+    x /= LA.norm(x, axis=0, keepdims=True)
+    return x
+
+
 if __name__ == '__main__':
     maxiter = 1e4
     tol = 1e-5
@@ -211,12 +219,23 @@ if __name__ == '__main__':
     m = 1000  # sample size
     mu = 0.1 * np.ones((n, 1))
     type = 0
-    lamb = 1
+    lamb = np.inf
     f_palm = 1e5
 
-    a = np.loadtxt(open('A.csv', 'rb'), delimiter=",")
-    u, d, v = LA.svd(a)
-    x0 = v[:, 0:n]
-    iter, f_amanpg, sparsity, timediff, x, y_man = spca_amanpg(a, mu, lamb, n, x0, x0, f_palm, verbose=True)
+    # a = np.loadtxt(open('A.csv', 'rb'), delimiter=",")
+    # _, _, v = LA.svd(a)
+    # x0 = v[:, 0:n]
+    
+    # testing for lambda = inf
+    for i in range(1, 11):
+        np.random.seed(i)
+        a = np.random.rand(m, d)
+        a = normalize(a)
+        _, _, v = LA.svd(a)
+        x0 = v[:, 0:n]
+        # print(np.mean(a, axis=0), LA.norm(a, axis=0))
+        iter, f_amanpg, sparsity, timediff, x, y_man = spca_amanpg(a, mu, lamb, n, x0, x0, f_palm, verbose=True)
+        print(f"{iter} iterations with final value {f_amanpg}, sparsity {sparsity}, timediff {timediff}.")
 
-    print(f"{iter} iterations with final value {f_amanpg}, sparsity {sparsity}, timediff {timediff}.")
+    # iter, f_amanpg, sparsity, timediff, x, y_man = spca_amanpg(a, mu, lamb, n, x0, x0, f_palm, verbose=True)
+    # print(f"{iter} iterations with final value {f_amanpg}, sparsity {sparsity}, timediff {timediff}.")

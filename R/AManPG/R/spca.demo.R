@@ -12,8 +12,14 @@ type <- 0
 f_palm <- 1e5  # what is this?
 
 set.seed(10)
-# a <- normalize(matrix(rnorm(m * d), m, d))
+a <- normalize(matrix(rnorm(m * d), m, d))
 x0 <- svd(a, nv=n)$v
 
-sprout <- spca.amanpg(a, mu, lambda=1, n, x0, x0, type, maxiter, tol, f_palm, verbose=TRUE)
-sprout <- spca.amanpg(a, mu, lambda=Inf, n, x0, x0, type, maxiter, tol, f_palm, verbose=TRUE)
+# test inf
+for (i in 1:10) {
+  a <- normalize(matrix(rnorm(m * d), m, d))
+  x0 <- svd(a, nv=n)$v
+  sprout <- spca.amanpg(a, mu, lambda=Inf, n, x0, x0, type, maxiter, tol, f_palm, verbose=TRUE)
+}
+
+# sprout <- spca.amanpg(a, mu, lambda=1, n, x0, x0, type, maxiter, tol, f_palm, verbose=TRUE)

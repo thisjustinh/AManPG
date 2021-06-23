@@ -185,6 +185,7 @@ spca.amanpg <- function(b, mu, lambda, n, x0, y0, f_palm, type=0, gamma=0.5,
 
         tx <- x - tau * rgx
         # tmp <- svd.econ(tx, type=0)
+        tmp <- svd(tx, nu=min(tx.dims[1], tx.dims[2]), nv=min(tx.dims[1], tx.dims[2]))
         x_trial <- tmp$u %*% Conj(t(tmp$v))
         total_linesearch <- total_linesearch + 1
         linesearch_flag <- 1
