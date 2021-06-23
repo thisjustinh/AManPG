@@ -11,7 +11,7 @@ def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm,
     m, d = np.shape(b)
     
     # anonymous function for sum of matrix mu times colsums of x
-    h = lambda x: np.sum(mu.T @ np.sum(x, axis=0))
+    h = lambda x: np.sum(mu.T @ np.sum(np.abs(x), axis=0))
 
     if d < m * 2:
         b = b.T @ b
