@@ -1,6 +1,7 @@
 import numpy as np
 import time
 from numpy import linalg as LA
+from numpy.core.numeric import full
 
 def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm, 
                 gamma=0.5, type=0, maxiter=1e4, tol=1e-5, 
@@ -11,7 +12,7 @@ def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm,
     m, d = np.shape(b)
     
     # anonymous function for sum of matrix mu times colsums of x
-    h = lambda x: np.sum(mu.T @ np.sum(np.abs(x), axis=0))
+    h = lambda x: np.sum(mu.T * np.sum(np.abs(x), axis=0, keepdims=True))
 
     if d < m * 2:
         b = b.T @ b
@@ -150,7 +151,7 @@ def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm,
             
             tx = x - tau * rgx
             u, s, v = LA.svd(tx, full_matrices=False)
-            x_trial = u @ v.T
+            x_trial = u @ v  # note that v is already transposed in numpy
             f_xtrial = -2 * np.sum(x_trial * ay)
             fxval = -2 * np.sum(x * ay)
             normpg = LA.norm(rgx, 'fro') ** 2
@@ -163,7 +164,7 @@ def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm,
 
                 tx = x - tau * rgx
                 u, s, v = LA.svd(tx, full_matrices=False)
-                x_trial = u @ v.T
+                x_trial = u @ v  # note that v is already transposed in numpy
                 f_xtrial = -2 * np.sum(x_trial * ay)
                 total_linesearch += 1
                 linesearch_flag = 1
@@ -221,21 +222,23 @@ if __name__ == '__main__':
     type = 0
     lamb = np.inf
     f_palm = 1e5
-
-    # a = np.loadtxt(open('A.csv', 'rb'), delimiter=",")
-    # _, _, v = LA.svd(a)
-    # x0 = v[:, 0:n]
     
-    # testing for lambda = inf
-    for i in range(1, 11):
-        np.random.seed(i)
-        a = np.random.rand(m, d)
-        a = normalize(a)
-        _, _, v = LA.svd(a)
-        x0 = v[:, 0:n]
-        # print(np.mean(a, axis=1)[0], LA.norm(a, axis=1)[0])
-        iter, f_amanpg, sparsity, timediff, x, y_man = spca_amanpg(a, mu, lamb, n, x0, x0, f_palm, verbose=True)
-        print(f"{iter} iterations with final value {f_amanpg}, sparsity {sparsity}, timediff {timediff}.")
+    test_finite = False
 
-    # iter, f_amanpg, sparsity, timediff, x, y_man = spca_amanpg(a, mu, lamb, n, x0, x0, f_palm, verbose=True)
-    # print(f"{iter} iterations with final value {f_amanpg}, sparsity {sparsity}, timediff {timediff}.")
+    if not test_finite:
+        # testing for lambda = inf
+        for i in range(1, 11):
+            np.random.seed(i)
+            a = np.random.rand(m, d)
+            a = normalize(a)
+            _, _, v = LA.svd(a)
+            x0 = v[:, 0:n]
+            # print(np.mean(a, axis=1)[0], LA.norm(a, axis=1)[0])
+            iter, f_amanpg, sparsity, timediff, x, y_man = spca_amanpg(a, mu, lamb, n, x0, x0, f_palm, verbose=False)
+            print(f"{iter} iterations with final value {f_amanpg}, sparsity {sparsity}, timediff {timediff}.")
+    else:
+        a = np.loadtxt(open('A.csv', 'rb'), delimiter=",")
+        _, _, v = LA.svd(a, full_matrices=True)
+        x0 = v.T[:, 0:n]
+        iter, f_amanpg, sparsity, timediff, x, y_man = spca_amanpg(a, mu, 1, n, x0, x0, f_palm, verbose=False)
+        print(f"{iter} iterations with final value {f_amanpg}, sparsity {sparsity}, timediff {timediff}.")

@@ -19,7 +19,13 @@ x0 <- svd(a, nv=n)$v
 for (i in 1:10) {
   a <- normalize(matrix(rnorm(m * d), m, d))
   x0 <- svd(a, nv=n)$v
-  sprout <- spca.amanpg(a, mu, lambda=Inf, n, x0, x0, type, maxiter, tol, f_palm, verbose=TRUE)
+  sprout <- spca.amanpg(a, mu, lambda=Inf, n, x0, x0, type, maxiter, tol, f_palm, verbose=FALSE)
+  print(paste(sprout$iter, "iterations,", sprout$sparsity, "sparsity,", sprout$time))
 }
 
-# sprout <- spca.amanpg(a, mu, lambda=1, n, x0, x0, type, maxiter, tol, f_palm, verbose=TRUE)
+# test finite
+library(readr)
+a <- as.matrix(read_csv("A.csv", col_names=FALSE))
+x0 <- svd(a, nv=n)$v
+sprout <- spca.amanpg(a, mu, lambda=1, n, x0, x0, type, maxiter, tol, f_palm, verbose=TRUE)
+print(paste(sprout$iter, "iterations,", sprout$sparsity, "sparsity,", sprout$time))
