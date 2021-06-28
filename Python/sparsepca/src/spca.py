@@ -1,11 +1,10 @@
 import numpy as np
 import time
 from numpy import linalg as LA
-from numpy.core.numeric import full
 
-def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm, 
-                gamma=0.5, type=0, maxiter=1e4, tol=1e-5, 
-                verbose=False):
+def spca_amanpg(b, mu, lamb, n, f_palm, 
+                x0=None, y0=None, gamma=0.5, type=0, 
+                maxiter=1e4, tol=1e-5, verbose=False):
     
     start = time.perf_counter()
     
@@ -23,6 +22,11 @@ def spca_amanpg(b, mu, lamb, n, x0, y0, f_palm,
     ly = 2 * s[0] ** 2 + 2 * lamb if not type else 2 * s[0] + 2 * lamb
     
     ### initialization ###
+    if x0 is None:
+        x0 = v[:, 0:n]
+    if y0 is None:
+        y0 = v[:, 0:n]
+
     x, y = x0, y0
     total_linesearch = 0
     linesearch_flag = 1
