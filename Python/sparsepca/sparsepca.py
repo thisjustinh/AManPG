@@ -16,7 +16,7 @@ def spca(b, mu, lamb, f_palm,
     lamb: float, numpy.inf
         L2-norm penalty term
     f_palm: float
-        upper bound for the gradient value to reach convergence
+        upper bound for the F-value to reach convergence
     x0: numpy.ndarray, optional
         initial x-values for the gradient method, default value is the first n right singular vectors
     y0: numpy.ndarray, optional
@@ -40,7 +40,7 @@ def spca(b, mu, lamb, f_palm,
     -------
     dict
         loadings: Loadings of the sparse principal components
-        f_manpg: Final gradient value
+        f_manpg: Final F-value
         x: Corresponding ndarray in subproblem to the loadings
         iter: Total number of iterations executed
         sparsity: Number of sparse loadings (loadings == 0) divided by number of all loadings
@@ -270,7 +270,7 @@ def prox_l1(b, lamb, r):
         proximal L1 mapping
     """
 
-    a = np.abs(b) - lamb.T
+    a = np.abs(b) - lamb.T  # broadcasted
 
     act_set = (a > 0).astype(float) if r < 15 else a > 0
     x_prox = act_set * np.sign(b) * a

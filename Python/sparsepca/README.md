@@ -2,7 +2,7 @@
 
 ## Description
 
-Uses an alternating manifold proximal gradient (AManPG) method to find sparse principal components from the given data or covariance matrix. 
+Uses an alternating manifold proximal gradient (AManPG) method to find sparse principal component loadings from the given data or covariance matrix. 
 
 Requires numpy to be installed.
 
@@ -21,7 +21,7 @@ spca(b, mu, lamb, f_palm,
 | `b` | numpy.ndarray | Either the data matrix or sample covariance matrix |
 | `mu` | float list | List of parameters of length n for L1-norm penalty |
 | `lamb` | float or numpy.inf | L2-norm penalty term |
-| `f_palm` | float | Upper bound for the gradient value to reach convergence |
+| `f_palm` | float | Upper bound for the F-value to reach convergence |
 | `x0` | numpy.ndarray | Initial x-values for the gradient method, default value is the first n right singular vectors |
 | `y0` | numpy.ndarray | Initial y-values for the gradient method, default value is the first n right singular vectors |
 | `n` | int | Number of principal components desired, default is 0 (returns min(n-1, p) principal components) |
@@ -39,7 +39,7 @@ Returns a dictionary with the following key-value pairs:
 | Key | Value Type | Value |
 | --- | --- | --- |
 | `loadings` | numpy.ndarray | Loadings of the sparse principal components |
-| `f_manpg` | float | Final gradient value |
+| `f_manpg` | float | Final F-value |
 | `x` | numpy.ndarray | Corresponding ndarray in subproblem to the loadings |
 | `iter` | int | Total number of iterations executed |
 | `sparsity` | float | Number of sparse loadings (loadings == 0) divided by number of all loadings |

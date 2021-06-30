@@ -1,10 +1,10 @@
 Metadata-Version: 2.1
 Name: sparsepca
-Version: 0.1.1
+Version: 0.1.2
 Summary: Sparse Principal Component Analysis in Python
 Home-page: UNKNOWN
-Author: Justin Huang and Benjamin Jochem
-Author-email: justinhuang496@gmail.com
+Author: Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+Author-email: lingzhou@psu.edu
 License: UNKNOWN
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
@@ -14,7 +14,7 @@ Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
-Uses an alternating manifold proximal gradient (AManPG) method to find sparse principal components from the given data or covariance matrix. 
+Uses an alternating manifold proximal gradient (AManPG) method to find sparse principal component loadings from the given data or covariance matrix. 
 
 Requires numpy to be installed.
 
@@ -33,7 +33,7 @@ spca(b, mu, lamb, f_palm,
 | `b` | numpy.ndarray | Either the data matrix or sample covariance matrix |
 | `mu` | float list | List of parameters of length n for L1-norm penalty |
 | `lamb` | float or numpy.inf | L2-norm penalty term |
-| `f_palm` | float | Upper bound for the gradient value to reach convergence |
+| `f_palm` | float | Upper bound for the F-value to reach convergence |
 | `x0` | numpy.ndarray | Initial x-values for the gradient method, default value is the first n right singular vectors |
 | `y0` | numpy.ndarray | Initial y-values for the gradient method, default value is the first n right singular vectors |
 | `n` | int | Number of principal components desired, default is 0 (returns min(n-1, p) principal components) |
@@ -51,7 +51,7 @@ Returns a dictionary with the following key-value pairs:
 | Key | Value Type | Value |
 | --- | --- | --- |
 | `loadings` | numpy.ndarray | Loadings of the sparse principal components |
-| `f_manpg` | float | Final gradient value |
+| `f_manpg` | float | Final F-value |
 | `x` | numpy.ndarray | Corresponding ndarray in subproblem to the loadings |
 | `iter` | int | Total number of iterations executed |
 | `sparsity` | float | Number of sparse loadings (loadings == 0) divided by number of all loadings |
