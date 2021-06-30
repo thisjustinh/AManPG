@@ -61,19 +61,19 @@ def spca(b, mu, lamb, f_palm,
         b = b.T @ b
         type = 1
 
-    u, s, v = LA.svd(b, full_matrices=False)
-    
-    ly = 2 * s[0] ** 2 + 2 * lamb if not type else 2 * s[0] + 2 * lamb
-    
-    ### initialization ###
+    u, s, v = LA.svd(b, full_matrices=True)
+
     if not n:
         n = d
 
     if x0 is None:
-        x0 = v[:, 0:n]
+        x0 = v[:, 0:n] 
     if y0 is None:
         y0 = v[:, 0:n]
-
+    
+    ly = 2 * s[0] ** 2 + 2 * lamb if not type else 2 * s[0] + 2 * lamb
+    
+    ### initialization ###
     x, y = x0, y0
     total_linesearch = 0
     linesearch_flag = 1
@@ -94,7 +94,7 @@ def spca(b, mu, lamb, f_palm,
         fx = -2 * np.sum(x * ay)
         fy = np.sum(y * ay) + lamb * LA.norm(y, 'fro') ** 2 + h(y)
         f_rgd = [fx + fy]
-
+        
         for i in range(1, int(maxiter)):
             if verbose:
                 loop_start = time.perf_counter()
@@ -237,7 +237,7 @@ def spca(b, mu, lamb, f_palm,
                     print("Final difference of", abs(f_rgd[i] - f_rgd[i - 1]))
                 break
     
-    y_norm = np.sqrt(np.sum(y ** 2, axis=0)).reshape(4,1)
+    y_norm = np.sqrt(np.sum(y ** 2, axis=0)).reshape(n,1)
     y_norm[y_norm == 0] = 1
 
     return {
@@ -300,20 +300,20 @@ def normalize(x):
 
 
 if __name__ == '__main__':
-    n = 4  # columns
+    n = 4 # columns
     d = 500  # dimensions
     m = 1000  # sample size
-    mu = 0.1 * np.ones((n, 1))
+    mu = 0.1 * np.ones((d, 1))
     f_palm = 1e5
 
     for i in range(1, 11):
         np.random.seed(i)
         a = np.random.normal(0, 1, size=(m, d))
-        iter, f_amanpg, sparsity, timediff, x, y_man = spca(a, mu, 1, f_palm, n=4, verbose=True)
-        fin_sprout = spca(a, mu, 1, f_palm, n=4)
+        fin_sprout = spca(a, mu, 1, f_palm, n=n, verbose=True)
         print(f"Finite: {fin_sprout['iter']} iterations with final value {fin_sprout['f_manpg']}, sparsity {fin_sprout['sparsity']}, timediff {fin_sprout['time']}.")    
         
-        inf_sprout = spca(a, mu, np.inf, f_palm, n=4, verbose=True)
+        inf_sprout = spca(a, mu, np.inf, f_palm, n=n, verbose=True)
         print(f"Infinite: {inf_sprout['iter']} iterations with final value {inf_sprout['f_manpg']}, sparsity {inf_sprout['sparsity']}, timediff {inf_sprout['time']}.")
+    
     print(fin_sprout['loadings'])
     print(inf_sprout['loadings'])
