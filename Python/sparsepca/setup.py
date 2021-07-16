@@ -6,7 +6,11 @@ with open('README.md', 'r') as f:
 
 setuptools.setup(
     name="sparsepca",
+<<<<<<< HEAD
     version="0.1.2",
+=======
+    version="0.1.4",
+>>>>>>> master
     author="Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue",
     author_email="lingzhou@psu.edu",
     description="Sparse Principal Component Analysis in Python",

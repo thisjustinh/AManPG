@@ -47,7 +47,11 @@ Returns a dictionary with the following key-value pairs:
 
 ## Authors
  
+<<<<<<< HEAD
 Justin Huang and Benjamin Jochem
+=======
+Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+>>>>>>> master
 
 ## References
 
