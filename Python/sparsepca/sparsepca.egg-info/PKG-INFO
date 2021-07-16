@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: sparsepca
-Version: 0.1.5
+Version: 0.2.0
 Summary: Sparse Principal Component Analysis in Python
 Home-page: UNKNOWN
 Author: Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
@@ -56,7 +56,7 @@ Returns a dictionary with the following key-value pairs:
 | `x` | numpy.ndarray | Corresponding ndarray in subproblem to the loadings |
 | `iter` | int | Total number of iterations executed |
 | `sparsity` | float | Number of sparse loadings (loadings == 0) divided by number of all loadings |
-| `time` | Number of seconds for execution |
+| `time` | float | Execution time in seconds |
 
 ## Authors
  
@@ -83,12 +83,16 @@ lambda2 = 1
 np.random.seed(10)
 a = np.random.normal(0, 1, size=(m, d))  # generate random normal 1000x500 matrix
 fin_sprout = spca_amanpg(a, lambda1, lambda2, k=k)
-print(f"Finite: {fin_sprout['iter']} iterations with final value {fin_sprout['f_manpg']}, sparsity {fin_sprout['sparsity']}, timediff {fin_sprout['time']}.")
+print(f"Finite: {fin_sprout['iter']} iterations with final value 
+		{fin_sprout['f_manpg']}, sparsity {fin_sprout['sparsity']}, 
+		timediff {fin_sprout['time']}.")
 
 fin_sprout['loadings']
 
 inf_sprout = spca_amanpg(a, lambda1, np.inf, k=4)
-print(f"Infinite: {inf_sprout['iter']} iterations with final value {inf_sprout['f_manpg']}, sparsity {inf_sprout['sparsity']}, timediff {inf_sprout['time']}.")
+print(f"Infinite: {inf_sprout['iter']} iterations with final value 
+		{inf_sprout['f_manpg']}, sparsity {inf_sprout['sparsity']}, 
+		timediff {inf_sprout['time']}.")
 
 inf_sprout['loadings']
 ```
