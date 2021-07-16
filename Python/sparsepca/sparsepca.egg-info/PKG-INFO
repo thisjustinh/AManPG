@@ -1,6 +1,18 @@
-# SparsePCA
-
-## Description
+Metadata-Version: 2.1
+Name: sparsepca
+Version: 0.1.5
+Summary: Sparse Principal Component Analysis in Python
+Home-page: UNKNOWN
+Author: Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+Author-email: lzxue@psu.edu
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
 
 Uses an alternating manifold proximal gradient (A-ManPG) method to find sparse principal component loadings from the given data or covariance matrix. 
 
@@ -80,3 +92,5 @@ print(f"Infinite: {inf_sprout['iter']} iterations with final value {inf_sprout['
 
 inf_sprout['loadings']
 ```
+
+
