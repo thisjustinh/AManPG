@@ -2,18 +2,19 @@ import numpy as np
 import time
 from numpy import linalg as LA
 
-def spca(b, mu, lamb, f_palm, 
-         x0=None, y0=None, n=0, gamma=0.5, type=0, 
-         maxiter=1e4, tol=1e-5, norm=True, verbose=False):
+def spca(z, lambda1, lambda2, 
+         x0=None, y0=None, k=0, gamma=0.5, type=0, 
+         maxiter=1e4, tol=1e-5, f_palm=1e5,
+         normalize=True, verbose=False):
     """Performs sparse principal component analysis on the input matrix using an alternating manifold proximal gradient (AManPG) method.
 
     Parameters
     ----------
-    b: numpy.ndarray
+    z: numpy.ndarray
         input data or covariance matrix
-    mu: list[float]
+    lambda1: list[float]
         list of parameters of length n for L1-norm penalty
-    lamb: float, numpy.inf
+    lambda2: float, numpy.inf
         L2-norm penalty term
     f_palm: float
         upper bound for the F-value to reach convergence
@@ -21,7 +22,7 @@ def spca(b, mu, lamb, f_palm,
         initial x-values for the gradient method, default value is the first n right singular vectors
     y0: numpy.ndarray, optional
         initial y-values for the gradient method, default value is the first n right singular vectors
-    n: int, optional
+    k: int, optional
         number of principal components desired, default is 0 (returns min(n-1, p) principal components)
     gamma: float, optional
         parameter to control how quickly the step size changes in each iteration, default is 0.5
@@ -31,7 +32,7 @@ def spca(b, mu, lamb, f_palm,
         maximum number of iterations allowed in the gradient method, default is 1e4
     tol: float, optional
         tolerance value required to indicate convergence (calculated as difference between iteration f-values), default is 1e-5
-    norm: bool, optional
+    normalize: bool, optional
         center and normalize rows to Euclidean length 1 if True, default is True
     verbose: bool, optional
         function prints progress between iterations if True, default is False
@@ -49,29 +50,32 @@ def spca(b, mu, lamb, f_palm,
 
     start = time.perf_counter()
     
-    if norm:
-        b = normalize(b)
+    if normalize:
+        z = preprocess(z)
 
-    m, d = np.shape(b)
+    m, d = np.shape(z)
     
     # anonymous function for sum of matrix mu times colsums of x
-    h = lambda x: np.sum(mu.T * np.sum(np.abs(x), axis=0, keepdims=True))
+    h = lambda x: np.sum(lambda1.T * np.sum(np.abs(x), axis=0, keepdims=True))
 
     if d < m * 2:
-        b = b.T @ b
+        z = z.T @ z
         type = 1
 
-    u, s, v = LA.svd(b, full_matrices=True)
+    u, s, v = LA.svd(z, full_matrices=False)
+    
+    ### initialization ###
+    u, s, v = LA.svd(z, full_matrices=True)
 
-    if not n:
-        n = d
+    if not k:
+        k = d
 
     if x0 is None:
-        x0 = v[:, 0:n] 
+        x0 = v[:, 0:k]
     if y0 is None:
-        y0 = v[:, 0:n]
-    
-    ly = 2 * s[0] ** 2 + 2 * lamb if not type else 2 * s[0] + 2 * lamb
+        y0 = v[:, 0:k]
+     
+    ly = 2 * s[0] ** 2 + 2 * lambda2 if not type else 2 * s[0] + 2 * lambda2
     
     ### initialization ###
     x, y = x0, y0
@@ -83,16 +87,16 @@ def spca(b, mu, lamb, f_palm,
     tau = 100 / d
 
     if not type:
-        ay = b.T @ (b @ y)
-        ax = b.T @ (b @ x)
+        ay = z.T @ (z @ y)
+        ax = z.T @ (z @ x)
     else:
-        ay = b @ y
-        ax = b @ x
+        ay = z @ y
+        ax = z @ x
 
     ### Main Loop ###
-    if not lamb == np.inf:
+    if not lambda2 == np.inf:
         fx = -2 * np.sum(x * ay)
-        fy = np.sum(y * ay) + lamb * LA.norm(y, 'fro') ** 2 + h(y)
+        fy = np.sum(y * ay) + lambda2 * LA.norm(y, 'fro') ** 2 + h(y)
         f_rgd = [fx + fy]
         
         for i in range(1, int(maxiter)):
@@ -105,9 +109,9 @@ def spca(b, mu, lamb, f_palm,
             t = t * 1.01 if not linesearch_flag_y else max(1 / ly, t / 1.01)
             linesearch_flag_y = 0
 
-            y_t = prox_l1(y - t * 2 * (ay - ax + lamb * y), mu * t, n)
-            ayt = b.T @ (b @ y_t) if not type else b @ y_t
-            f_ytrial = -2 * np.sum(x * ayt) + np.sum(y_t * ayt) + lamb * LA.norm(y_t, 'fro') ** 2 + h(y_t)
+            y_t = prox_l1(y - t * 2 * (ay - ax + lambda2 * y), lambda1 * t, k)
+            ayt = z.T @ (z @ y_t) if not type else z @ y_t
+            f_ytrial = -2 * np.sum(x * ayt) + np.sum(y_t * ayt) + lambda2 * LA.norm(y_t, 'fro') ** 2 + h(y_t)
             normpg = LA.norm(y_t - y, 'fro') ** 2 / t ** 2
 
             # adjust step size to be appropriate and recalculate values
@@ -116,9 +120,9 @@ def spca(b, mu, lamb, f_palm,
                 if t < 1e-5 / d:
                     break
 
-                y_t = prox_l1(y - t * 2 * (ay - ax + lamb * y), mu * t, n)
-                ayt = b.T @ (b @ y_t) if not type else b @ y_t
-                f_ytrial = -2 * np.sum(x * ayt) + np.sum(y_t * ayt) + lamb * LA.norm(y_t, 'fro') ** 2 + h(y_t)
+                y_t = prox_l1(y - t * 2 * (ay - ax + lambda2 * y), lambda1 * t, k)
+                ayt = z.T @ (z @ y_t) if not type else z @ y_t
+                f_ytrial = -2 * np.sum(x * ayt) + np.sum(y_t * ayt) + lambda2 * LA.norm(y_t, 'fro') ** 2 + h(y_t)
                 linesearch_flag_y = 1
 
             y, ay = y_t, ayt  # assign updated values from loop
@@ -157,8 +161,8 @@ def spca(b, mu, lamb, f_palm,
                 f_xtrial = -2 * np.sum(x_trial * ay)
 
             x, fx = x_trial, f_xtrial  # assign updated values from loop
-            ax = b.T @ (b @ x) if not type else b @ x
-            fy = np.sum(y * ay) + lamb * LA.norm(y, 'fro') ** 2 + h(y)
+            ax = z.T @ (z @ x) if not type else z @ x
+            fy = np.sum(y * ay) + lambda2 * LA.norm(y, 'fro') ** 2 + h(y)
             f_rgd.append(fx + fy)
 
             if verbose:
@@ -192,8 +196,8 @@ def spca(b, mu, lamb, f_palm,
 
             ### update y ###
             t = 1/2
-            y = prox_l1(y - 2 * t * (-ax + y), mu * t, n)
-            ay = b.T @ (b @ y) if not type else b @ y
+            y = prox_l1(y - 2 * t * (-ax + y), lambda1 * t, k)
+            ay = z.T @ (z @ y) if not type else z @ y
 
             ### update x ###
             gx = -2 * ay
@@ -222,7 +226,7 @@ def spca(b, mu, lamb, f_palm,
                 f_xtrial = -2 * np.sum(x_trial * ay)
 
             x, fx = x_trial, f_xtrial  # assign updated values from loop
-            ax = b.T @ (b @ x) if not type else b @ x
+            ax = z.T @ (z @ x) if not type else z @ x
             fy = LA.norm(y, 'fro') ** 2 + h(y)
             f_rgd.append(fx + fy)
 
@@ -237,7 +241,7 @@ def spca(b, mu, lamb, f_palm,
                     print("Final difference of", abs(f_rgd[i] - f_rgd[i - 1]))
                 break
     
-    y_norm = np.sqrt(np.sum(y ** 2, axis=0)).reshape(n,1)
+    y_norm = np.sqrt(np.sum(y ** 2, axis=0)).reshape(k,1)
     y_norm[y_norm == 0] = 1
 
     return {
@@ -245,19 +249,19 @@ def spca(b, mu, lamb, f_palm,
         "f_manpg": f_rgd[i],
         "x": x,
         "iter": i,
-        "sparsity": np.sum(y == 0) / (d * n),
+        "sparsity": np.sum(y == 0) / (d * k),
         "time": time.perf_counter() - start
     }
 
     # return i, f_rgd[i], sparsity, time.perf_counter() - start, x, y_man
 
 
-def prox_l1(b, lamb, r):
+def prox_l1(z, lamb, r):
     """Calculates the proximal L1 mapping for the given input matrix
 
     Parameters
     ----------
-    b: numpy.ndarray
+    z: numpy.ndarray
         input matrix
     lamb: list[float]
         parameters for calculating proximal L1 mapping
@@ -270,15 +274,15 @@ def prox_l1(b, lamb, r):
         proximal L1 mapping
     """
 
-    a = np.abs(b) - lamb.T  # broadcasted
+    a = np.abs(z) - lamb.T  # broadcasted
 
     act_set = (a > 0).astype(float) if r < 15 else a > 0
-    x_prox = act_set * np.sign(b) * a
+    x_prox = act_set * np.sign(z) * a
     inact_set = a <= 0  # if required
     return x_prox
 
 
-def normalize(x):
+def preprocess(x):
     """Center input matrix to mean 0 and scale to Euclidean length 1
 
     Parameters
@@ -300,19 +304,19 @@ def normalize(x):
 
 
 if __name__ == '__main__':
-    n = 4 # columns
+    k = 4  # columns
     d = 500  # dimensions
     m = 1000  # sample size
-    mu = 0.1 * np.ones((d, 1))
-    f_palm = 1e5
+    lambda1 = 0.1 * np.ones((k, 1))
+    lambda2 = 1  # wanna try np.inf?
 
     for i in range(1, 11):
         np.random.seed(i)
         a = np.random.normal(0, 1, size=(m, d))
-        fin_sprout = spca(a, mu, 1, f_palm, n=n, verbose=True)
+        fin_sprout = spca(a, lambda1, lambda2, k=k, verbose=True)
         print(f"Finite: {fin_sprout['iter']} iterations with final value {fin_sprout['f_manpg']}, sparsity {fin_sprout['sparsity']}, timediff {fin_sprout['time']}.")    
         
-        inf_sprout = spca(a, mu, np.inf, f_palm, n=n, verbose=True)
+        inf_sprout = spca(a, lambda1, lambda2, k=k, verbose=True)
         print(f"Infinite: {inf_sprout['iter']} iterations with final value {inf_sprout['f_manpg']}, sparsity {inf_sprout['sparsity']}, timediff {inf_sprout['time']}.")
     
     print(fin_sprout['loadings'])
