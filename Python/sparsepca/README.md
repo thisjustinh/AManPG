@@ -2,13 +2,13 @@
 
 ## Description
 
-![pypi version](https://img.shields.io/pypi/v/sparsepca.svg)
-
-![python version](https://img.shields.io/pypi/pyversions/sparsepca.svg)
+![pypi version](https://img.shields.io/pypi/v/sparsepca.svg)![python version](https://img.shields.io/pypi/pyversions/sparsepca.svg)
 
 Uses an alternating manifold proximal gradient (A-ManPG) method to find sparse principal component loadings from the given data or covariance matrix. 
 
 Requires numpy to be installed.
+
+The GitHub repository can be found [here](https://github.com/xinging-birds/AManPG).
 
 ## Usage
 
@@ -56,7 +56,11 @@ Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
 
 ## References
 
-Chen, S., Ma, S., Xue, L., and Zou, H. (2020) "An Alternating Manifold Proximal Gradient Method for Sparse Principal Component Analysis and Sparse Canonical Correlation Analysis" *INFORMS Journal on Optimization* 2:3, 192-208
+Chen, S., Ma, S., Xue, L., and Zou, H. (2020) "An Alternating Manifold Proximal Gradient Method for Sparse Principal Component Analysis and Sparse Canonical Correlation Analysis" *INFORMS Journal on Optimization* 2:3, 192-208.
+
+Zou, H., Hastie, T., & Tibshirani, R. (2006). Sparse principal component analysis. Journal of Computational and Graphical Statistics, 15(2), 265-286.
+
+Zou, H., & Xue, L. (2018). A selective overview of sparse principal component analysis. Proceedings of the IEEE, 106(8), 1311-1320.
 
 ## Example
 
