@@ -1,26 +1,25 @@
 Metadata-Version: 2.1
 Name: sparsepca
-Version: 0.2.1
+Version: 0.2.2
 Summary: Sparse Principal Component Analysis in Python
 Home-page: UNKNOWN
-Author: Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+Author: Shixiang Chen, Justin Huang, Benjamin Jochem, Shiqian Ma, Lingzhou Xue, and Hui Zou
 Author-email: lzxue@psu.edu
-License: UNKNOWN
+License: MIT
+Project-URL: Documentation, https://xinging-birds.github.io/AManPG/
+Project-URL: Source, https://github.com/xinging-birds/AManPG
 Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
 Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
-# SparsePCA
-
-## Description
-
-![pypi version](https://img.shields.io/pypi/v/sparsepca.svg)
-
-![python version](https://img.shields.io/pypi/pyversions/sparsepca.svg)
+![pypi version](https://img.shields.io/pypi/v/sparsepca.svg)![python version](https://img.shields.io/pypi/pyversions/sparsepca.svg)
 
 Uses an alternating manifold proximal gradient (A-ManPG) method to find sparse principal component loadings from the given data or covariance matrix. 
 
@@ -69,8 +68,8 @@ Returns a dictionary with the following key-value pairs:
 | `time` | float | Execution time in seconds |
 
 ## Authors
- 
-Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+
+Shixiang Chen, Justin Huang, Benjamin Jochem, Shiqian Ma, Lingzhou Xue, and Hui Zou
 
 ## References
 
@@ -114,12 +113,17 @@ inf_sprout['loadings']
 
 # History
 
+## 0.2.2
+
+- Doc fixes
+- PyPI metadata fixes
+
 ## 0.2.1
 
-- Doc fixes.
+- Doc fixes
 
 ## 0.2.0
 
-- Initial PyPI release.
+- Initial PyPI release
 
 

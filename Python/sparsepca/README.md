@@ -51,8 +51,8 @@ Returns a dictionary with the following key-value pairs:
 | `time` | float | Execution time in seconds |
 
 ## Authors
- 
-Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+
+Shixiang Chen, Justin Huang, Benjamin Jochem, Shiqian Ma, Lingzhou Xue, and Hui Zou
 
 ## References
 
