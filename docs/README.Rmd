@@ -10,7 +10,7 @@ output:
 \newcommand{\argmin}{\operatorname{arg\,min}}
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval=FALSE, python.reticulate=FALSE)
+knitr::opts_chunk$set(echo = TRUE, python.reticulate=FALSE)
 ```
 
 - [Introduction](#introduction)
@@ -143,7 +143,7 @@ spca.amanpg(z, lambda1, lambda2,
 spca(z, lambda1, lambda2, 
      x0=None, y0=None, k=0, gamma=0.5, type=0, 
      maxiter=1e4, tol=1e-5, f_palm=1e5,
-	 normalize=True, verbose=False):
+	   normalize=True, verbose=False):
 ```
 
 #### Arguments
@@ -183,55 +183,93 @@ Consider the two examples below for running sparse PCA on randomly-generated dat
 
 #### R Example
 
-In the following example, we load the library using `library(amanpg)` and then define a 1000x500 randomly-generated matrix from the normal distribution. We set the L1-penalty term to 0.1 and L2-penalty term to infinity, and seek the first four principal components.
-
-The default initial point are the `k` right singular vectors from SVD, which we can see manually broken down here. In the function call, we pass the parameters in and output our list sprout. 
-
-The results are printed out, and then we view the loadings.
+As with other libraries, begin by loading `amanpg` in R.
 
 ```{r}
-d <- 500  # dimension
-m <- 1000 # sample size
-a <- normalize(matrix(rnorm(m * d), m, d))
-lambda1 <- 0.1 * matrix(data=1, nrow=4, ncol=1)
-x0 <- svd(a, nv=4)$v
-sprout <- spca.amanpg(a, lambda1, lambda2=Inf, x0=x0, y0=x0, k=4) 
-print(paste(sprout$iter, "iterations,", sprout$sparsity, "sparsity,", sprout$time))
+library(amanpg)
+```
+
+Before proceeding, it is helpful to determine a few parameters. Let the rank of the sparse loadings matrix be $k=4$ (returning four principal components), the input data matrix be $n\times p$ where $n=1000$ and $p=500$, $\lambda_1$ be a $4\times 1$ "matrix" where $\lambda_{i,1}=0.1$, and $\lambda_2=1$.
+
+```{r}
+# parameter initialization
+k <- 4
+n <- 1000
+p <- 500
+lambda1 <- matrix(data=0.1, nrow=4, ncol=1)
+lambda2 <- 1
+```
+
+For this example, the data matrix `z` is randomly generated from the normal distribution. Although it should be centered to mean 0 and normalized to Euclidean length 1, the function will automatically preprocess the input matrix when `normalize=TRUE`. 
+
+```{r}
+# data matrix generation
+set.seed(10)
+z <- matrix(rnorm(n * p), n, p)
+as.data.frame(z)
+```
+
+Alternatively, the data can be normalized beforehand and the parameter is set to `FALSE` in the function call. However, this example won't do so, but the output of normalize is displayed below.
+
+```{r}
+# see the effects of normalize()
+as.data.frame(normalize(z))
+```
+
+Now the function is called, passing through matrix `a`, `lambda1`, `lambda2`, and our desired rank `k`. The output is stored as a list in `fin_sprout`. Note that if a different initial point is desired, `x0` and `y0` should be modified, but the default value as the first $k$ right singular vectors is sufficient for this example.
+
+If further printout is desired, set `verbose=TRUE` for progress updates (time, difference for convergence, $F$ value) per iteration.
+
+```{r}
+# function call
+fin_sprout <- spca.amanpg(z, lambda1, lambda2, k=4)
+print(paste(fin_sprout$iter, "iterations,", fin_sprout$sparsity, "sparsity,", fin_sprout$time))
+```
+
+The loadings can be viewed from `fin_sprout$loadings`. Note that many entries are set to zero as a result of the induced sparsity.
+
+```{r}
+# View loadings
+as.data.frame(fin_sprout$loadings)
+```
+Now consider an alternative situation where we set $\lambda_2$ to a large constant `Inf`. The algorithm changes by directly retracting `B` without using a while loop to determine an appropriate retraction step size and only iterating `A`. 
+
+```{r}
+# infinite lambda2
+inf_sprout <- spca.amanpg(z, lambda1, lambda2=Inf, k=4) 
+print(paste(inf_sprout$iter, "iterations,", inf_sprout$sparsity, "sparsity,", inf_sprout$time))
 
 # extract loadings
-View(sprout$loadings)
+as.data.frame(inf_sprout$loadings)
 ```
 
 #### Python Example
 
 Note that the Python package depends on numpy.
 
-In the following example, the package function is imported first. The appropriate parameters are defined&mdash;in this case, we want four sparse principal components (rank-`k` loadings)&mdash;from a 1000x500 data matrix. The L1-penalty terms are set to 0.1, and the L2-penalty term is set to 1. Note that any positive value can be used for the L2-penalty term, up to `np.inf`. 
+The following example accomplishes the same situation (down to the same randomly-generated data) but in Python.
 
-A random 1000x500 matrix is generated from the normal distribution, and then the function is called through `spca()`. A printout of the results follows, along with observing the loadings. 
-
-The second example keeps the same parameters except switching `lambda2` with infinity. Again, the results are printed out and the loadings are observed.
-
-```{python reticulate=FALSE}
+```{python eval=FALSE}
 import numpy as np
 from sparsepca import spca
 
-k = 4  # columns
-d = 500  # dimensions
-m = 1000  # sample size
+k = 4  # rank
+p = 500  # dimensions
+n = 1000  # sample size
 lambda1 = 0.1 * np.ones((n, 1))
 lambda2 = 1
 
 np.random.seed(10)
-a = np.random.normal(0, 1, size=(m, d))  # generate random normal 1000x500 matrix
-fin_sprout = spca(a, lambda1, lambda2, k=k)
+z = np.random.normal(0, 1, size=(n, p))  # generate random normal 1000x500 matrix
+
+fin_sprout = spca(z, lambda1, lambda2, k=k)
 print(f"Finite: {fin_sprout['iter']} iterations with final value 
 		{fin_sprout['f_manpg']}, sparsity {fin_sprout['sparsity']}, 
 		timediff {fin_sprout['time']}.")
 
 fin_sprout['loadings']
 
-inf_sprout = spca_amanpg(a, lambda1, np.inf, k=4)
+inf_sprout = spca(z, lambda1, np.inf, k=k)
 print(f"Infinite: {inf_sprout['iter']} iterations with final value 
 		{inf_sprout['f_manpg']}, sparsity {inf_sprout['sparsity']}, 
 		timediff {inf_sprout['time']}.")
