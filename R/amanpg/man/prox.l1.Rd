@@ -19,8 +19,8 @@ prox.l1(z, lambda, r)
   \item{x_prox}{proximal L1 Mapping}
 }
 \references{
-Shixiang Chen, Shiqian Ma, Lingzhou Xue and Hui Zou. An Alternating Manifold Proximal Gradient Method for Sparse PCA and Sparse CCA. 2019.
+Chen, S., Ma, S., Xue, L., and Zou, H. (2020) "An Alternating Manifold Proximal Gradient Method for Sparse Principal Component Analysis and Sparse Canonical Correlation Analysis" *INFORMS Journal on Optimization* 2:3, 192-208
 }
 \author{
-Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+Shixiang Chen, Justin Huang, Benjamin Jochem, Shiqian Ma, Lingzhou Xue and Hui Zou
 }

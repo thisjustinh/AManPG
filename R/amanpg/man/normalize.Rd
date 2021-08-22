@@ -18,5 +18,5 @@ normalize(x, center=TRUE, scale=TRUE)
 \item{x}{normalized matrix}
 }
 \author{
-Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+Shixiang Chen, Justin Huang, Benjamin Jochem, Shiqian Ma, Lingzhou Xue and Hui Zou
 }

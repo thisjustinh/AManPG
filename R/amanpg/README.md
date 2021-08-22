@@ -1,4 +1,4 @@
-# SPCA
+# amanpg
 
 ## Description
 
@@ -48,12 +48,11 @@ Returns a dictionary with the following key-value pairs:
 
 ## Authors
  
-Justin Huang, Benjamin Jochem, Shiqian Ma, and Lingzhou Xue
+Shixiang Chen, Justin Huang, Benjamin Jochem, Shiqian Ma, Lingzhou Xue and Hui Zou
 
 ## References
 
-Chen, S., Xue, L., & Zou, H. (2020). An Alternating Manifold Proximal Gradient Method for Sparse PCA and Sparse CCA.
-INFORMS Journal on Optimization, 2(3), 192-208.
+Chen, S., Ma, S., Xue, L., and Zou, H. (2020) "An Alternating Manifold Proximal Gradient Method for Sparse Principal Component Analysis and Sparse Canonical Correlation Analysis" *INFORMS Journal on Optimization* 2:3, 192-208
 
 Zou, H., Hastie, T., & Tibshirani, R. (2006). Sparse principal component analysis. 
 Journal of Computational and Graphical Statistics, 15(2), 265-286.
