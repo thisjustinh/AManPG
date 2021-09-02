@@ -13,6 +13,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE, python.reticulate=FALSE)
 ```
 
+## Contents
+
 - [Introduction](#introduction)
   - [Algorithm](#algorithm-description)
   - [Convergence](#convergence)
@@ -232,6 +234,36 @@ The loadings can be viewed from `fin_sprout$loadings`. Note that many entries ar
 # View loadings
 as.data.frame(fin_sprout$loadings)
 ```
+
+The resulting scree plot looks like this.
+
+```{r fig.align='center', fig.cap="Scree plots for the finite lambda case."}
+pr.var <- (apply(fin_sprout$x, 2, sd))^2
+pve <- pr.var / sum(pr.var)
+
+par(mfrow=c(1,2))
+plot(pve, 
+     xlab="Sparse PC", 
+     ylab="Proportion of Variance Explained", 
+     ylim=c(0,1), 
+     type="b")
+plot(cumsum(pve), 
+     xlab="Sparse PC", 
+     ylab="Cumulative Proportion of Variance Explained", 
+     ylim=c(0,1),
+     type="b")
+```
+
+The resulting biplot, with the zero loadings filtered out, can be obtained using the following:
+
+```{r fig.align='center', fig.cap="Biplot for the finite lambda case."}
+y_sub = apply(fin_sprout$loadings, 1, function(row) all(row != 0))
+loadings = fin_sprout$loadings[y_sub, ]
+
+par(mfrow=c(1,1))
+biplot(fin_sprout$x, loadings, xlab="PC 1", ylab="PC 2")
+```
+
 Now consider an alternative situation where we set $\lambda_2$ to a large constant `Inf`. The algorithm changes by directly retracting `B` without using a while loop to determine an appropriate retraction step size and only iterating `A`. 
 
 ```{r}
@@ -241,6 +273,35 @@ print(paste(inf_sprout$iter, "iterations,", inf_sprout$sparsity, "sparsity,", in
 
 # extract loadings
 as.data.frame(inf_sprout$loadings)
+```
+
+We obtain the scree plot and the biplot using the same method.
+
+```{r fig.align='center', fig.cap="Scree plot for lambda=inf case."}
+pr.var <- (apply(inf_sprout$x, 2, sd))^2
+pve <- pr.var / sum(pr.var)
+
+par(mfrow=c(1,2))
+plot(pve, 
+     xlab="Sparse PC", 
+     ylab="Proportion of Variance Explained", 
+     ylim=c(0,1), 
+     type="b")
+plot(cumsum(pve), 
+     xlab="Sparse PC", 
+     ylab="Cumulative Proportion of Variance Explained", 
+     ylim=c(0,1),
+     type="b")
+```
+
+For data with high dimensionality, the biplot is still much harder to read with to a lower sparsity value.
+
+```{r fig.align='center', fig.cap="Biplot for lambda=inf case. Observe that with lower sparsity in the loadings and high-dimensional data, the biplot becomes less readable."}
+y_sub = apply(inf_sprout$loadings, 1, function(row) all(row != 0))
+loadings = inf_sprout$loadings[y_sub, ]
+
+par(mfrow=c(1,1))
+biplot(inf_sprout$x, loadings, xlab="PC 1", ylab="PC 2")
 ```
 
 #### Python Example
