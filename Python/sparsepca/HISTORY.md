@@ -1,5 +1,9 @@
 # History
 
+## 0.2.3
+
+- Doc fixes
+
 ## 0.2.2
 
 - Doc fixes

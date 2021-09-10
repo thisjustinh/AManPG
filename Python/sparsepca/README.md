@@ -2,7 +2,7 @@
 
 ## Description
 
-![pypi version](https://img.shields.io/pypi/v/sparsepca.svg)![python version](https://img.shields.io/pypi/pyversions/sparsepca.svg)
+![pypi version](https://img.shields.io/pypi/v/sparsepca.svg)![python version](https://img.shields.io/pypi/pyversions/sparsepca.svg) ![pypi downloads](https://img.shields.io/pypi/dm/sparsepca)
 
 Uses an alternating manifold proximal gradient (A-ManPG) method to find sparse principal component loadings from the given data or covariance matrix. 
 
@@ -73,7 +73,7 @@ from sparsepca import spca_amanpg
 k = 4  # columns
 d = 500  # dimensions
 m = 1000  # sample size
-lambda1 = 0.1 * np.ones((n, 1))
+lambda1 = 0.1 * np.ones((k, 1))
 lambda2 = 1
 
 np.random.seed(10)

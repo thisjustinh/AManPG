@@ -1,6 +1,8 @@
 # Alternating Manifold Proximal Gradient Method (A-ManPG)
 
-![pypi version](https://img.shields.io/pypi/v/sparsepca.svg) ![python version](https://img.shields.io/pypi/pyversions/sparsepca.svg)
+![pypi version](https://img.shields.io/pypi/v/sparsepca.svg) ![python version](https://img.shields.io/pypi/pyversions/sparsepca.svg) ![pypi downloads](https://img.shields.io/pypi/dm/sparsepca)
+
+![CRAN version](https://www.r-pkg.org/badges/version/amanpg) ![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/amanpg)
 
 - [Introduction](#introduction)
 - [Installation](#installation)

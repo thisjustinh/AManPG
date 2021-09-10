@@ -9,7 +9,7 @@ with open('HISTORY.md', 'r') as f:
 
 setuptools.setup(
     name="sparsepca",
-    version="0.2.2",
+    version="0.2.3",
     author="Shixiang Chen, Justin Huang, Benjamin Jochem, Shiqian Ma, Lingzhou Xue, and Hui Zou",
     author_email="lzxue@psu.edu",
     description="Sparse Principal Component Analysis in Python",
