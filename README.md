@@ -107,7 +107,7 @@ from sparsepca import spca
 k = 4  # columns
 d = 500  # dimensions
 m = 1000  # sample size
-lambda1 = 0.1 * np.ones((n, 1))
+lambda1 = 0.1 * np.ones((k, 1))
 lambda2 = 1
 
 np.random.seed(10)

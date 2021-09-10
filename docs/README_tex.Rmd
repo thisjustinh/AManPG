@@ -198,7 +198,7 @@ Before proceeding, it is helpful to determine a few parameters. Let the rank of 
 k <- 4
 n <- 1000
 p <- 500
-lambda1 <- matrix(data=0.1, nrow=4, ncol=1)
+lambda1 <- matrix(data=0.1, nrow=k, ncol=1)
 lambda2 <- 1
 ```
 
@@ -340,7 +340,7 @@ from sparsepca import spca
 k = 4  # rank
 p = 500  # dimensions
 n = 1000  # sample size
-lambda1 = 0.1 * np.ones((n, 1))
+lambda1 = 0.1 * np.ones((k, 1))
 lambda2 = 1
 
 np.random.seed(10)
